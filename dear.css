@@ -1,0 +1,30 @@
+body {
+  margin: 1% 25% 1% 25%;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+input {
+  font-family: inherit;
+}
+
+::selection {
+  color: black;
+  background: yellow;
+}
+
+::-moz-selection {
+  color: black;
+  background: yellow;
+}
+
+a {
+  color: #07e;
+}
+
+a:hover {
+  color: #FF3333;
+}
+
+#errors {
+  color: IndianRed;
+}
