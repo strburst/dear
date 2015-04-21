@@ -1,116 +1,51 @@
-var tableModel = {};
+var tablePrefix = '__dear_';
 
-function error(message) {
-  $('#errors').html(message + ' <input id="dismissError" type="button"'
-      + 'value="Dismiss"></input>');
-  $('#dismissError').click(function() {
-    $('#errors').html('');
-  });
-}
-
-function createTable() {
-  var newTableName = $('#newTableName').val();
-  if (localStorage[newTableName]) {
-    error('Can\'t create new table "' + newTableName + '": already exists');
-    return;
+function createTable(tableName) {
+  if (!localStorage[tableName]) {
+    localStorage[tablePrefix + tableName] = '{}';
   }
-
-  localStorage[newTableName] = '{}';
-
-  updateTableList();
 }
 
-function updateTableList() {
-  var optList = '<option></option>';
-  for (key in localStorage) {
-    optList += '<option value=' + key + '>' + key + '</option>';
-  }
-
-  $('#changeTable').html(optList);
-}
-
-function readTable() {
-  var tableName = $('#changeTable').val();
-
+function readTable(tableName) {
   // Read tableModel from local storage
-  tableModel = JSON.parse(localStorage[tableName]);
+  return JSON.parse(localStorage[tablePrefix + tableName]);
 }
 
-function writeTable() {
-  var tableName = $('#changeTable').val();
-
-  // Update tableModel with the data currently on the page
-  $('#workspace input[type=text]').each(function() {
-    var node = $(this);
-    var name = node.attr('name');
-    var value = node.val();
-
-    tableModel[name] = value;
-  });
-
+function writeTable(tableName, tableModel) {
   // Write tableModel to local storage
-  localStorage[tableName] = JSON.stringify(tableModel);
+  localStorage[tablePrefix + tableName] = JSON.stringify(tableModel);
 }
 
-// Write out an html representation of the given table to the DOM
-function displayTable() {
-  readTable();
-
-  var accum = '';
-  for (key in tableModel) {
-    accum += '<p name="' + key + '"><input id="' + key
-      + 'X" type="button" value="X"></input> ' + key
-      + ': <input type="text" name="' + key + '" value="' + tableModel[key]
-      + '"></input></p>';
+function createRecord(tableName, recordName, value) {
+  var tableModel = readTable(tableName);
+  if (!tableModel[recordName]) {
+    tableModel[recordName] = value;
   }
 
-  accum += '<input id="writeTable" type="button" value="Write table"></input>';
-
-  $('#workspace').html(accum);
-  $('#writeTable').click(writeTable);
-
-  for (key in tableModel) {
-    $('#' + key + 'X').click(function() {
-      var node = $(this);
-      var key = node.parent().attr('name');
-
-      delete tableModel[key];
-      node.parent().remove();
-      writeTable();
-    });
-  }
+  writeTable(tableName, tableModel);
 }
 
-function createRecord() {
-  var tableName = $('#changeTable').val();
-  var recordName = $('#newRecordName').val();
-
-  tableModel[recordName] = '';
-  writeTable();
-  displayTable();
+function writeRecord(tableName, recordName, value) {
+  var tableModel = readTable(tableName);
+  tableModel[recordName] = value;
+  writeTable(tableName, tableModel);
 }
 
-function deleteTable() {
-  var tableName = $('#changeTable').val();
+function deleteRecord(tableName, recordName) {
+  var tableModel = readTable(tableName);
+  delete tableModel[recordName];
+  writeTable(tableName, tableModel);
+}
 
-  delete localStorage[tableName];
+function deleteTable(tableName) {
+  delete localStorage[tablePrefix + tableName];
   $('#changeTable option[value=' + tableName + ']').remove();
 }
 
-function deleteEverything() {
-  localStorage.clear();
-
-  updateTableList();
-
-  $('#workspace').empty();
+function listTables() {
+  return Object.keys(localStorage).filter(function(str) {
+    return str.slice(0, tablePrefix.length) == tablePrefix;
+  }).map(function(str) {
+    return str.slice(tablePrefix.length);
+  });
 }
-
-$(function() {
-  $('#createTable').click(createTable);
-  $('#changeTable').change(displayTable);
-  $('#createRecord').click(createRecord);
-  $('#deleteTable').click(deleteTable);
-  $('#clearLocalStorage').click(deleteEverything);
-
-  updateTableList();
-});
