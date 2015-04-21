@@ -97,11 +97,20 @@ function deleteTable() {
   $('#changeTable option[value=' + tableName + ']').remove();
 }
 
+function deleteEverything() {
+  localStorage.clear();
+
+  updateTableList();
+
+  $('#workspace').empty();
+}
+
 $(function() {
   $('#createTable').click(createTable);
   $('#changeTable').change(displayTable);
   $('#createRecord').click(createRecord);
   $('#deleteTable').click(deleteTable);
+  $('#clearLocalStorage').click(deleteEverything);
 
   updateTableList();
 });
