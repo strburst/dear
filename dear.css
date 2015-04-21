@@ -3,7 +3,7 @@ body {
   font-family: 'Share Tech Mono', monospace;
 }
 
-input {
+input, select {
   font-family: inherit;
 }
 
