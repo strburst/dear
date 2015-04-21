@@ -1,9 +1,5 @@
 var tableModel = {};
 
-function hasPipe(string) {
-  return /\|/.test(string);
-}
-
 function error(message) {
   $('#errors').html(message + ' <input id="dismissError" type="button"'
       + 'value="Dismiss"></input>');
@@ -17,9 +13,6 @@ function createTable() {
   if (localStorage[newTableName]) {
     error('Can\'t create new table "' + newTableName + '": already exists');
     return;
-  }
-  if (hasPipe(newTableName)) {
-    error('Can\'t create new table "' + newTableName + '": has a pipe');
   }
 
   localStorage[newTableName] = '{}';
