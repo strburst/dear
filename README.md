@@ -1,2 +1,2 @@
 # dear
-A fake little database in local storage
+A simple wrapper around reading/writing JSON objects to local storage.
