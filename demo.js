@@ -21,7 +21,7 @@ function updateTableList() {
 function collectTable() {
   var tableModel = {};
 
-  $('#workspace input[type=text]').each(function() {
+  $('#recordList input[type=text]').each(function() {
     var node = $(this);
     var name = node.attr('name');
     var value = node.val();
@@ -44,7 +44,7 @@ function displayTable(tableModel) {
 
   accum += '<input id="writeTable" type="button" value="Write table"></input>';
 
-  $('#workspace').html(accum);
+  $('#recordList').html(accum);
   $('#writeTable').click(function() {
     var tableName = $('#changeTable').val();
     var tableModel = collectTable();
@@ -69,7 +69,7 @@ function deleteEverything() {
 
   updateTableList();
 
-  $('#workspace').empty();
+  $('#recordList').empty();
 }
 
 $(function() {
@@ -100,7 +100,7 @@ $(function() {
 
     deleteTable(tableName);
     $('#changeTable option[value=' + tableName + ']').remove();
-    $('#workspace').empty();
+    $('#recordList').empty();
   });
 
   $('#clearLocalStorage').click(deleteEverything);
