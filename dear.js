@@ -39,7 +39,6 @@ function deleteRecord(tableName, recordName) {
 
 function deleteTable(tableName) {
   delete localStorage[tablePrefix + tableName];
-  $('#changeTable option[value=' + tableName + ']').remove();
 }
 
 function listTables() {
