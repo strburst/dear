@@ -82,7 +82,7 @@ $(function() {
 
   $('#changeTable').change(function() {
     var tableName = $('#changeTable').val();
-    var tableModel = readTable(tableName);
+    var tableModel = readCopyTable(tableName);
 
     displayTable(tableModel);
   });
@@ -92,7 +92,7 @@ $(function() {
     var recordName = $('#newRecordName').val();
 
     createRecord(tableName, recordName, '');
-    displayTable(readTable(tableName));
+    displayTable(readCopyTable(tableName));
   });
 
   $('#deleteTable').click(function() {

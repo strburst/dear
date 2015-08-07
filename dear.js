@@ -4,11 +4,45 @@ function createTable(tableName) {
   if (!localStorage[tableName]) {
     localStorage[tablePrefix + tableName] = '{}';
   }
+
+  return Object.create(null);
 }
 
-function readTable(tableName) {
-  // Read tableModel from local storage
+function readCopyTable(tableName) {
   return JSON.parse(localStorage[tablePrefix + tableName]);
+}
+
+function readAutoTable(tableName) {
+  var model = JSON.parse(localStorage[tablePrefix + tableName]);
+
+  var result = Object.create(null);;
+
+  function registerGetterSetter(obj, key, value) {
+    // Define a copy to refer to
+    Object.defineProperty(obj, tablePrefix + key, {
+      enumerable: false,
+      value: value,
+      writable: true
+    });
+
+    // Define the getter/setter the user uses
+    Object.defineProperty(obj, key, {
+      enumerable: true,
+      get: function() {
+        return this[tablePrefix + key];
+      },
+      set: function(x) {
+        this[tablePrefix + key] = x;
+        writeTable(tableName, this);
+      }
+    });
+  }
+
+  for (var key in model) {
+    registerGetterSetter(result, key, model[key]);
+  }
+
+  return result;
 }
 
 function writeTable(tableName, tableModel) {
